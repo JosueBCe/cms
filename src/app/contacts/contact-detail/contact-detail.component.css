@@ -1,0 +1,4 @@
+.col-xs-6 {
+    display: flex;
+    justify-content: space-evenly;
+}
