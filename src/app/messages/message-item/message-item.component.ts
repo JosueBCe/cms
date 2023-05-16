@@ -1,4 +1,6 @@
 import { Component, Input } from '@angular/core';
+import { Contact } from 'src/app/contacts/contact.model';
+import { ContactService } from 'src/app/contacts/contact.service';
 import { Message } from '../message.model';
 @Component({
   selector: 'cms-message-item',
@@ -6,5 +8,12 @@ import { Message } from '../message.model';
   styleUrls: ['./message-item.component.css']
 })
 export class MessageItemComponent {
-  @Input() message: Message | undefined; 
+  messageSender: string = '';
+  @Input()
+  message!: Message; 
+  constructor(private contactService: ContactService) { }
+  ngOnInit(){
+    const contact: Contact = this.contactService.getContact(this.message?.sender);
+    this.messageSender = contact.name
+  }
 }
