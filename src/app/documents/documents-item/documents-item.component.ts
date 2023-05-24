@@ -9,6 +9,7 @@ import { Document } from '../document.model';
 export class DocumentsItemComponent implements OnInit {
 @Input () document : Document | undefined 
 @Output() documentSelected = new EventEmitter<void>();
+@Input() index: string | undefined;
 
   constructor() { }
 

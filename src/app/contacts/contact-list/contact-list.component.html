@@ -4,12 +4,12 @@
       <h2>Contacts</h2>
     </div>
     <div class="col-xs-4 vcenter">
-      <button class="btn btn-success">New Contact</button>
+      <button class="btn btn-success" [routerLink]="['new']">New Contact</button>
     </div>
   </div>
   <div class="row contact-list-container">
     <div class="col-xs-12">
-      <cms-contact-item *ngFor="let contact of contacts" [contact]="contact" (contactSelected)="onSelected(contact)">
+      <cms-contact-item *ngFor="let contact of contacts" [contact]="contact">
 
       </cms-contact-item>
 
