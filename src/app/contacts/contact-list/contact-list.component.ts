@@ -10,13 +10,13 @@ import { ContactService } from '../contact.service';
   styleUrls: ['./contact-list.component.css'],
 })
 export class ContactListComponent implements OnInit {
-
+  term: string = '';
   contacts: Contact[] = [];
   private subscription!: Subscription;
   constructor(private contactService: ContactService) { }
 
   ngOnInit() {
-    this.contacts = this.contactService.getContacts();
+    //this.contacts = this.contactService.getContacts();
     this.subscription = this.contactService.contactListChangedEvent.subscribe(
       (contacts: Contact[]) => {
         this.contacts = contacts;
@@ -28,6 +28,12 @@ export class ContactListComponent implements OnInit {
       }
     )
 
+  }
+  
+search(value: string) {
+
+  this.term = value;
+  
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

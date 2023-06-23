@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Contact } from '../contact.model';
 import { ContactService } from '../contact.service';
 
@@ -12,6 +13,9 @@ export class ContactDetailComponent implements OnInit {
 
   @Input() contact!: Contact ;
   id!: string;
+  private subscription!: Subscription;
+  
+  groupContacts: Contact[] = [];
   // contact: Contact = new Contact(
   //   '1',
   //   'R. Kent Jackson',
@@ -33,10 +37,16 @@ export class ContactDetailComponent implements OnInit {
         this.id = params['id'];
         this.contact = this.contactService.getContact(this.id);
       }
-    )
+    );
+    this.subscription = this.contactService.contactChangedEvent.subscribe((contacts: Contact[]) => {
+      const updatedContact = contacts.find(c => c.id === this.contact.id);
+      if (updatedContact && updatedContact.group) {
+        this.groupContacts = updatedContact.group.slice();
+      }
+    });
   }
   onDelete(){
-    this.contactService.deletecontact(this.contact);
+    this.contactService.deleteContact(this.contact);
     this.router.navigateByUrl('/contacts');
   }
 

@@ -8,6 +8,7 @@ import { DocumentsDetailsComponent } from "./documents/documents-details/documen
 import { DocumentsListComponent } from "./documents/documents-list/documents-list.component";
 import { DocumentsComponent } from "./documents/documents.component";
 import { MessageListComponent } from "./messages/message-list/message-list.component";
+import { MessagesResolver } from "./messages/message-resolver.service";
 
 const appRoutes: Routes = [
     {
@@ -36,7 +37,9 @@ const appRoutes: Routes = [
     },
     {
         path: "messages",
-        component: MessageListComponent
+        component: MessageListComponent,
+        resolve: {messages: MessagesResolver}
+
     },
     {
         path: "contacts",
@@ -62,7 +65,8 @@ const appRoutes: Routes = [
 
 @NgModule({
     imports: [RouterModule.forRoot(appRoutes)],
-    exports: [RouterModule]
+    exports: [RouterModule],
+    providers: [MessagesResolver]
 })
 export class AppRoutingModule {
 
