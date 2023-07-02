@@ -12,8 +12,8 @@ export class MessageService {
   messagesChanged = new Subject<Message[]>();
 
   messages: Message[] = [];
-  private messagesUrl = 'https://mean-stack-48dee-default-rtdb.firebaseio.com/messages.json';
 
+  messagesUrl = "http://localhost:3000/api/messages";
   constructor(private http: HttpClient) {
     this.getMessages().subscribe(
       (messages: Message[]) => {
@@ -33,7 +33,7 @@ export class MessageService {
 
 
   getMessages(): Observable<Message[]> {
-    return this.http.get<Message[]>(this.messagesUrl);
+    return this.http.get<Message[]>(this.messagesUrl, { responseType: 'json' });
   }
 
   getMessageResolver(): Observable<Message[]> {
@@ -73,11 +73,66 @@ export class MessageService {
         }
       );
   }
+  /* 
+    addMessage(message: Message) {
+      this.messages.push(message);
+      this.storeMessages();
+    } */
 
   addMessage(message: Message) {
-    this.messages.push(message);
-    this.storeMessages();
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    this.http.post<{ message: string, data: Message }>(this.messagesUrl, message, { headers: headers })
+      .subscribe(
+        (responseData) => {
+          this.messages.push(responseData.data);
+          this.messageChangedEvent.next(this.messages.slice());
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
   }
 
+  updateMessage(originalMessage: Message, newMessage: Message) {
+    const pos = this.messages.findIndex(m => m.id === originalMessage.id);
+
+    if (pos < 0) {
+      return;
+    }
+
+    newMessage.id = originalMessage.id;
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    this.http.put(this.messagesUrl + originalMessage.id, newMessage, { headers: headers })
+      .subscribe(
+        () => {
+          this.messages[pos] = newMessage;
+          this.messageChangedEvent.next(this.messages.slice());
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+  }
+
+  deleteMessage(message: Message) {
+    const pos = this.messages.findIndex(m => m.id === message.id);
+
+    if (pos < 0) {
+      return;
+    }
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    this.http.delete(this.messagesUrl + message.id, { headers: headers })
+      .subscribe(
+        () => {
+          this.messages.splice(pos, 1);
+          this.messageChangedEvent.next(this.messages.slice());
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+  }
 
 }

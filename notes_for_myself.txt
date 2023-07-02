@@ -1,0 +1,6 @@
+run mongod 
+run mongosh 
+run server 
+run frontend 
+
+1) missing method sort and send in the add , delete and update document 

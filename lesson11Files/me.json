@@ -1,0 +1,9 @@
+
+{ 
+    "id": "101",
+    "name": "yourName",
+    "email": "yourEmail",
+    "phone": "yourPhone",
+    "imageUrl": "yourImageUrl",
+    "group": null
+ }
