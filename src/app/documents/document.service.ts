@@ -23,6 +23,7 @@ private documentsUrl = 'http://localhost:3000/api/documents/';
         this.documents = documents;
         this.maxDocumentId = this.getMaxId();
         this.sortDocuments();
+   
         this.documentListChangedEvent.next(this.documents.slice());
       },
       (error: any) => {

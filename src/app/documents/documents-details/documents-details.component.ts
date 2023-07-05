@@ -12,8 +12,9 @@ import { DocumentService } from '../document.service';
 })
 export class DocumentsDetailsComponent implements OnInit {
   nativeWindow: any;
-  document!: Document ;
+  document!: Document | undefined ;
   id!: string;  
+  subscription: any;
   constructor(private documentService: DocumentService,
     private route: ActivatedRoute,
     private router: Router,
@@ -23,21 +24,31 @@ export class DocumentsDetailsComponent implements OnInit {
 
 
   ngOnInit(){
+    
     this.route.params.subscribe(
       (params: Params) => {
         this.id = params['id'];
         this.document = this.documentService.getDocument(this.id);
       }
     )
+    this.subscription = this.documentService.documentListChangedEvent.subscribe(
+      (documents: Document[]) => {
+        // Find the document with the same ID as this component
+        const doc = documents.find(d => d.id === this.id);
+        if (doc) {
+          this.document = doc;
+        }
+      }
+    );
     this.nativeWindow = this.windowRef.getNativeWindow();
   }
   onView(){
-    if(this.document.url){
+    if(this.document?.url){
       this.nativeWindow.open(this.document.url);
     }
   }
   onDelete(){
-    this.documentService.deleteDocument(this.document);
+    this.documentService.deleteDocument(this.document!);
     this.router.navigate(['/documents']);
   }
 

@@ -37,7 +37,6 @@ mongoose
         console.error(err);
         return;
       }
-      console.log(collections);
     });
   })
   .catch((err) => console.log("Connection failed: " + err));

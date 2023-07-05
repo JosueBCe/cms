@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+/* import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { Contact } from './contact.model';
@@ -114,5 +114,153 @@ export class ContactService {
     this.storeContacts();
   }
 
+
+}
+ */
+import { EventEmitter, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { map, Observable, Subject, tap } from 'rxjs';
+import { Contact } from './contact.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ContactService {
+  contactListChangedEvent = new Subject<Contact[]>();
+  contactSelectedEvent = new EventEmitter<Contact>();
+  contactChangedEvent = new EventEmitter<Contact[]>();
+
+  contacts: Contact[] = [];
+
+  contactsUrl = "http://localhost:3000/api/contacts";
+  
+  constructor(private http: HttpClient) {
+    this.getContacts().subscribe(
+      (contacts: Contact[]) => {
+        this.contacts = contacts;
+        console.log(this.contacts)
+        this.contactChangedEvent.next(this.contacts.slice());
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+  }
+
+  setContacts(contacts: Contact[]) {
+    this.contacts = contacts;
+    this.contactListChangedEvent.next(this.contacts.slice());
+  }
+
+
+  getContacts(): Observable<Contact[]> {
+    return this.http.get<{contacts: Contact[]}>(this.contactsUrl, { responseType: 'json' })
+      .pipe(
+        map(responseData => responseData.contacts),
+        tap(contacts => {
+          this.contacts = contacts;
+          this.contactListChangedEvent.next(this.contacts.slice());
+        })
+      );
+  }
+  
+  getContactResolver(): Observable<Contact[]> {
+    return this.http.get<Contact[]>(this.contactsUrl).pipe(
+      map((contacts: Contact[]) => {
+        return contacts.map((contact: Contact) => {
+          return {
+            ...contact,
+          };
+        });
+      }),
+      tap((contacts: Contact[]) => {
+        this.contacts = contacts;
+        this.contactListChangedEvent.next(this.contacts.slice());
+      })
+    );
+  }
+
+  getContact(id: string): Contact {
+    for (const contact of this.contacts) {
+      if (contact.id === id) {
+        return contact;
+      }
+    }
+    return null!;
+  }
+
+ 
+  getSingleContact(id: string) {
+    return this.http.get<Contact>('http://localhost:3000/api/contacts/' + id);
+  }
+  storeContacts() {
+    const contacts = this.contacts.slice();
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    this.http.put(this.contactsUrl, contacts, { headers: headers })
+      .subscribe(
+        () => {
+          this.contactListChangedEvent.next(contacts.slice());
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+  }
+
+  addContact(contact: Contact) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    this.http.post<{ message: string, data: Contact }>(this.contactsUrl, contact, { headers: headers })
+      .subscribe(
+        (responseData) => {
+          this.contacts.push(responseData.data);
+          this.contactListChangedEvent.next(this.contacts.slice());
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+  }
+
+  updateContact(originalContact: Contact, newContact: Contact) {
+    const pos = this.contacts.findIndex(c => c.id === originalContact.id);
+
+    if (pos < 0) {
+      return;
+    }
+
+    newContact.id = originalContact.id;
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    this.http.put(this.contactsUrl + '/' + originalContact.id, newContact, { headers: headers })
+      .subscribe(
+        () => {
+          this.contacts[pos] = newContact;
+          this.contactListChangedEvent.next(this.contacts.slice());
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+  }
+
+  deleteContact(contact: Contact) {
+    const pos = this.contacts.findIndex(c => c.id === contact.id);
+
+    if (pos < 0) {
+      return;
+    }
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    this.http.delete(this.contactsUrl + '/' + contact.id, { headers: headers })
+      .subscribe(
+        () => {
+          this.contacts.splice(pos, 1);
+          this.contactListChangedEvent.next(this.contacts.slice());
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+  }
 
 }

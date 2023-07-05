@@ -20,13 +20,14 @@ export class DocumentsListComponent implements OnInit {
     this.subscription = this.documentService.documentListChangedEvent.subscribe(
       (documents: Document[]) => {
         this.documents = documents;
+        
       }
     )
-    this.documentService.documentChangedEvent.subscribe(
+ /*    this.documentService.documentChangedEvent.subscribe(
       (documents: Document[]) => {
         this.documents = documents;
       }
-    )
+    ) */
   }
 
   ngOnDestroy(): void {

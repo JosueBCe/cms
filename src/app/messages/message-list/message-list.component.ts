@@ -78,9 +78,11 @@ export class MessageListComponent implements OnInit {
     this.messages.push(message);
   }
 } */
-import { Component, OnInit } from '@angular/core';
+/* import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Message } from '../message.model';
+import { MessageService } from '../message.service';
 
 @Component({
   selector: 'cms-message-list',
@@ -88,14 +90,66 @@ import { Message } from '../message.model';
   styleUrls: ['./message-list.component.css']
 })
 export class MessageListComponent implements OnInit {
+  private subscription!: Subscription;
   messages: Message[] = [];
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute,private messagesService : MessageService) { }
 
   ngOnInit() {
-    this.messages = this.route.snapshot.data['messages'];
+    this.subscription= this.messagesService.messagesChanged.subscribe(
+      (messages: Message[]) => {
+      
+        this.messages = messages;
+        console.log(this.messages)
+      }
+    )
   }
   onAddMessage(message: Message) {
     this.messages.push(message);
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+} */
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { Message } from '../message.model';
+import { MessageService } from '../message.service';
+
+@Component({
+  selector: 'cms-message-list',
+  templateUrl: './message-list.component.html',
+  styleUrls: ['./message-list.component.css']
+})
+export class MessageListComponent implements OnInit {
+  private subscription!: Subscription;
+  messages: Message[] = [];
+
+  constructor(private route: ActivatedRoute, private messageService: MessageService) { }
+
+  ngOnInit() {
+    this.subscription = this.messageService.messagesChanged.subscribe(
+      (messages: Message[]) => {
+        this.messages = messages;
+        console.log(messages)
+
+      }
+    );
+    this.messageService.getMessages().subscribe(
+      (messages: Message[]) => {
+        this.messages = messages;
+        console.log(messages)
+
+      }
+    );
+  }
+
+  onAddMessage(message: Message) {
+    this.messageService.addMessage(message);
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

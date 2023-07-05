@@ -16,15 +16,6 @@ export class ContactDetailComponent implements OnInit {
   private subscription!: Subscription;
   
   groupContacts: Contact[] = [];
-  // contact: Contact = new Contact(
-  //   '1',
-  //   'R. Kent Jackson',
-  //   'jacksonk@byui.edu',
-  //   '208-496-3771',
-  //   '../../assets/images/jacksonk.jpg',
-  //   []
-  // );
-
   constructor(
     private contactService: ContactService,
     private router: Router,
@@ -32,18 +23,20 @@ export class ContactDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.params.subscribe(
-      (params: any) => {
-        this.id = params['id'];
-        this.contact = this.contactService.getContact(this.id);
-      }
-    );
+   
     this.subscription = this.contactService.contactChangedEvent.subscribe((contacts: Contact[]) => {
+      this.route.params.subscribe(
+        (params: any) => {
+          this.id = params['id'];
+          this.contact = this.contactService.getContact(this.id);
+        }
+      );
       const updatedContact = contacts.find(c => c.id === this.contact.id);
       if (updatedContact && updatedContact.group) {
         this.groupContacts = updatedContact.group.slice();
       }
-    });
+    })
+
   }
   onDelete(){
     this.contactService.deleteContact(this.contact);

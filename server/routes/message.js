@@ -5,7 +5,7 @@ const sequenceGenerator = require('./sequenceGenerator');
 
 router.get('/', (req, res, next) => {
     Message.find()
-        // .populate('sender')
+        .populate('sender')
         .then(messages => {
             res.status(200).json(messages);
         })
