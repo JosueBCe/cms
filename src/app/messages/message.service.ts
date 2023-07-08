@@ -20,7 +20,7 @@ export class MessageService {
       (messages: Message[]) => {
         this.messages = messages;
         this.messagesChanged.next(this.messages.slice());
-      
+
       },
       (error: any) => {
         console.log(error);
@@ -152,20 +152,19 @@ export class MessageService {
   messagesUrl = "http://localhost:3000/api/messages";
 
   constructor(private http: HttpClient) {
-    this.fetchMessages();
-  }
-
-  fetchMessages() {
     this.getMessages().subscribe(
       (messages: Message[]) => {
         this.messages = messages;
-        this.messagesChanged.next(this.messages.slice());
+        console.log(messages)
+        this.messageChangedEvent.next(this.messages.slice());
       },
       (error: any) => {
         console.log(error);
       }
     );
   }
+
+
 
   setMessages(messages: Message[]) {
     this.messages = messages;

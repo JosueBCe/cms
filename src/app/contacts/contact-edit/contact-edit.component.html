@@ -10,7 +10,7 @@
             name="name"
             [ngModel]="contact?.name"
             #name="ngModel"
-   
+
             class="form-control required"
             size="120"
             max="120"
@@ -31,9 +31,9 @@
             size="120"
             max="255"
             required
-            pattern=[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
             />
-            
+
           <div class="alert alert-danger" *ngIf="email.touched && email.invalid">
             Enter a valid email address.
           </div>
@@ -65,7 +65,7 @@
           <input
             type="text"
             id="imageUrl"
-            name="url"
+            name="imageUrl"
             [ngModel]="contact?.imageUrl"
             #url="ngModel"
             class="form-control"
@@ -78,11 +78,11 @@
         <div class="form-group" style="margin: 1rem;">
           <label for="groupList">Group Contacts:</label>
 
-          <div class="row" 
+          <div class="row"
             id="groupList"
-              style="min-height: 3rem;" 
-              dnd-droppable 
-              [dropZones]="['contactGroup']" 
+              style="min-height: 3rem;"
+              dnd-droppable
+              [dropZones]="['contactGroup']"
               (onDropSuccess)="addToGroup($event)">
 
             <div *ngFor="let contact of groupContacts; let i = index">
@@ -91,7 +91,7 @@
                 <button class="btn btn-danger col-sm-2 deleteButton" (click)="onRemoveItem(i)">X</button>
               </div>
             </div>
-            <span class="dragMsg" 
+            <span class="dragMsg"
             *ngIf="groupContacts.length < 1"
             style="height: 200px;"
             >

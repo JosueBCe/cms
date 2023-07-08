@@ -3,7 +3,6 @@ const router = express.Router();
 const Contact = require('../models/contact');
 const sequenceGenerator = require('./sequenceGenerator');
 
-
 router.get('/', (req, res, next) => {
     Contact.find()
         .populate('group')
@@ -23,7 +22,7 @@ router.get('/', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
     const maxContactId = sequenceGenerator.nextId("contacts");
-
+    console.log(req.body)
     const contact = new Contact({
         id: maxContactId,
         name: req.body.name,
@@ -36,7 +35,7 @@ router.post('/', (req, res, next) => {
     contact.save()
         .then(createdContact => {
             res.status(201).json({
-                message: 'Contact added successfully',
+                /* message: 'Contact added successfully', */
                 contact: createdContact
             });
         })

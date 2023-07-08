@@ -17,13 +17,13 @@ export class DocumentService {
 private documentsUrl = 'http://localhost:3000/api/documents/';
 
   constructor(private http: HttpClient) {
-    
+
     this.getDocuments().subscribe(
       (documents: Document[]) => {
         this.documents = documents;
         this.maxDocumentId = this.getMaxId();
         this.sortDocuments();
-   
+
         this.documentListChangedEvent.next(this.documents.slice());
       },
       (error: any) => {
@@ -44,9 +44,10 @@ private documentsUrl = 'http://localhost:3000/api/documents/';
         return 0;
       }
     });
-  
-    this.documentListChangedEvent.next([...this.documents]);
-  }
+/*     this.documentListChangedEvent.next([...this.documents]);
+ */
+this.documentChangedEvent.next([...this.documents]);
+}
 
   getDocuments(): Observable<Document[]> {
     return this.http.get<Document[]>(this.documentsUrl, { responseType: 'json' });
@@ -76,7 +77,7 @@ private documentsUrl = 'http://localhost:3000/api/documents/';
     });
   }
 
- 
+
   getDocument(id: string): Document {
     for (let document of this.documents) {
       if (document.id === id) {

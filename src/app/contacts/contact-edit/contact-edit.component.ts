@@ -11,8 +11,8 @@ import { ContactService } from '../contact.service';
 })
 
 export class ContactEditComponent implements OnInit {
-  originalContact!: Contact;
-  contact: Contact | undefined;
+  originalContact!: Contact ;
+  contact: Contact  | undefined ;
   groupContacts: Contact[] = [];
   editMode: boolean = false;
   id!: string;
@@ -46,23 +46,34 @@ export class ContactEditComponent implements OnInit {
     );
   }
   onSubmit(form: NgForm) {
+    this.contactService.contactsFetched = false;
     const value = form.value;
+    const id = this.contactService.maxContactId + 1
     const newContact = new Contact(
-      value.id,
+      id.toString(),
       value.name,
       value.email,
       value.phone,
       value.imageUrl,
-      value.group
+      this.groupContacts
     );
 
 
     if (this.editMode) {
+      this.contactService.contactsFetched = false;
+      newContact.group = this.groupContacts;
+      console.log(newContact)
       this.contactService.updateContact(this.originalContact, newContact);
+
     } else {
+      this.contactService.contactsFetched = false;
+      newContact.group = this.groupContacts;
       this.contactService.addContact(newContact);
+
     }
+    this.contactService.contactsFetched = false;
     this.router.navigate(['/contacts']);
+
   }
 
   isInvalidContact(newContact: Contact) {
@@ -89,6 +100,7 @@ export class ContactEditComponent implements OnInit {
       return;
     }
     this.groupContacts.splice(index, 1);
+    this.contactService.contactsFetched = false;
   }
   onCancel() {
     this.router.navigate(['/contacts']);
@@ -101,5 +113,8 @@ export class ContactEditComponent implements OnInit {
       return;
     }
     this.groupContacts.push(selectedContact);
+    console.log('Updated group contacts:', this.groupContacts);
+
+    this.contactService.contactsFetched = false;
   }
 }

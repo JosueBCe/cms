@@ -1,5 +1,5 @@
 <div class="container-fluid">
-<!-- 
+<!--
   <div class="panel panel-default">
     <div class="row">
       <div class="col-xs-12">
@@ -9,7 +9,7 @@
               <span class="title pad-left-right">Contacts</span>
             </div>
             <div class="row">
-             
+
               <div class="pull-right pad-left-right">
                 <a class="btn btn-success" [routerLink]="['new']">New Contact</a>
               </div>
@@ -29,14 +29,19 @@
       <div class="glyphicon glyphicon-search input-group-addon" (click)="search(searchBox.value)"></div>
     </div>
     <div class="col-xs-4 vcenter">
-      
+
       <button class="btn btn-success" [routerLink]="['new']">New Contact</button>
     </div>
   </div>
   <div class="row contact-list-container">
     <div class="col-xs-12">
-      <cms-contact-item *ngFor="let contact of contacts | contactsFilter: term" [contact]="contact" dnd-draggable [dragEnabled]="true"
-        [dragData]="contact" [dropZones]="['contactGroup']" >
+      <cms-contact-item
+      *ngFor="let contact of contacts | contactsFilter: term"
+      [contact]="contact"
+      dnd-draggable
+      [dragEnabled]="true"
+      [dragData]="contact"
+      [dropZones]="['contactGroup']" >
       </cms-contact-item>
     </div>
   </div>

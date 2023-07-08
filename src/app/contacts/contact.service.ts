@@ -129,16 +129,18 @@ export class ContactService {
   contactListChangedEvent = new Subject<Contact[]>();
   contactSelectedEvent = new EventEmitter<Contact>();
   contactChangedEvent = new EventEmitter<Contact[]>();
+  maxContactId!: number;
 
   contacts: Contact[] = [];
-
+  contactsFetched = false;
   contactsUrl = "http://localhost:3000/api/contacts";
-  
+
   constructor(private http: HttpClient) {
     this.getContacts().subscribe(
       (contacts: Contact[]) => {
         this.contacts = contacts;
         console.log(this.contacts)
+        this.maxContactId = this.getMaxId();
         this.contactChangedEvent.next(this.contacts.slice());
       },
       (error: any) => {
@@ -153,6 +155,16 @@ export class ContactService {
   }
 
 
+  getMaxId(): number {
+    let maxId = 0;
+    for (const contact of this.contacts) {
+      let currentId = parseInt(contact.id);
+      if (currentId > maxId) {
+        maxId = currentId;
+      }
+    }
+    return maxId;
+  }
   getContacts(): Observable<Contact[]> {
     return this.http.get<{contacts: Contact[]}>(this.contactsUrl, { responseType: 'json' })
       .pipe(
@@ -163,7 +175,7 @@ export class ContactService {
         })
       );
   }
-  
+
   getContactResolver(): Observable<Contact[]> {
     return this.http.get<Contact[]>(this.contactsUrl).pipe(
       map((contacts: Contact[]) => {
@@ -189,9 +201,9 @@ export class ContactService {
     return null!;
   }
 
- 
+
   getSingleContact(id: string) {
-    return this.http.get<Contact>('http://localhost:3000/api/contacts/' + id);
+    return this.http.get<Contact>('http://localhost:3000/api/contacts/' + +id);
   }
   storeContacts() {
     const contacts = this.contacts.slice();
@@ -207,12 +219,40 @@ export class ContactService {
       );
   }
 
-  addContact(contact: Contact) {
+ /*  addContact(contact: Contact) {
+    this.contactsFetched = false;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
     this.http.post<{ message: string, data: Contact }>(this.contactsUrl, contact, { headers: headers })
       .subscribe(
         (responseData) => {
+          this.contactsFetched = false;
+
           this.contacts.push(responseData.data);
+
+          this.contactChangedEvent.next(this.contacts.slice());
+          this.contactListChangedEvent.next(this.contacts.slice());
+
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+  }
+ */
+  addContact(newContact: Contact) {
+    console.log(newContact);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    this.http.post<{ contact: Contact }>(this.contactsUrl,
+      newContact,
+      { headers: headers })
+      .subscribe(
+        (responseData) => {
+          console.log('New contact added:', responseData.contact);
+          this.contacts.push(responseData.contact);
           this.contactListChangedEvent.next(this.contacts.slice());
         },
         (error: any) => {
@@ -220,7 +260,6 @@ export class ContactService {
         }
       );
   }
-
   updateContact(originalContact: Contact, newContact: Contact) {
     const pos = this.contacts.findIndex(c => c.id === originalContact.id);
 
@@ -229,13 +268,15 @@ export class ContactService {
     }
 
     newContact.id = originalContact.id;
-
+    this.contactsFetched = false;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     this.http.put(this.contactsUrl + '/' + originalContact.id, newContact, { headers: headers })
       .subscribe(
         () => {
+
           this.contacts[pos] = newContact;
           this.contactListChangedEvent.next(this.contacts.slice());
+
         },
         (error: any) => {
           console.log(error);
@@ -254,7 +295,9 @@ export class ContactService {
     this.http.delete(this.contactsUrl + '/' + contact.id, { headers: headers })
       .subscribe(
         () => {
+          this.contactsFetched = false;
           this.contacts.splice(pos, 1);
+          console.log(this.contacts);
           this.contactListChangedEvent.next(this.contacts.slice());
         },
         (error: any) => {

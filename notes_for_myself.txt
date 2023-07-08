@@ -1,44 +1,45 @@
-steps to run program: 
-in CMD 
-run mongod 
-run mongosh 
+steps to run program:
+in CMD
+run mongod
+run mongosh
 
-in project folder
-run server 
-run frontend 
+in project folderp
+run server
+run frontend
 
 
-Preparing project tasks: 
- - contact service connected to MongoDb => CRUD 
-    - contact detail saving front end => image and group of contacts\\ backend working 
-    - creating new contact frontend too 
-    - selecting new contact front end. 
-    
- - fix nav between pages 
- - fix add new subcontacts: 
-    - ability to add group of contacts 
-    - and display them before editing 
-    - consider connecting with MongoDb and do the observable staff that happen in the documents 
- - fix image path 
+Preparing project tasks:
+ - contact service connected to MongoDb => CRUD ✅
+    - contact detail saving front end => image and group of contacts\\ backend working ✅
+    - creating new contact frontend too ✅
+    - selecting new contact front end. ✅
+
+ - fix nav between pages ✅
+ - fix add new subcontacts:
+    - ability to add group of contacts✅
+    - and display them before editing ✅
+    - consider connecting with MongoDb and do the observable staff that happen in the docum-ents ✅
+ - fix image path ✅
+
 
 
 
 
 
 ============ Content Management System - Final Project ========================
-contacts -> Tasks and Subtasks 
+contacts -> Tasks and Subtasks
 documents -> Client's projects
 messages -> chatting and able to switch in the form for who is submitting
 
-ideas to implement: 
--> complete task the same as delete or pass to a new list of completed 
+ideas to implement:
+-> complete task the same as delete or pass to a new list of completed
 
 tasks:
 - add functionality to which user is posting the message (message page)
-- change names forms, titles 
-- add video or something cool functionality 
-- Styling: dark blue classic professional 
+- change names forms, titles
+- add video or something cool functionality
+- Styling: dark blue classic professional
 
-Extras if time: 
-- label that connect to the project in the client's projects board 
-- 
+Extras if time:
+- label that connect to the project in the client's projects board
+-

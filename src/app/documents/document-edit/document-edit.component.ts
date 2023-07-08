@@ -16,15 +16,64 @@ export class DocumentEditComponent implements OnInit {
     private route: ActivatedRoute) {
 
   }
-/*   [x: string]: any;
-  @ViewChild('f', { static: false })
-  slForm!: NgForm; */
 
 
   originalDocument!: Document;
   document: Document | undefined;
   editMode: boolean = false;
   id!: string;
+
+  ngOnInit() {
+    this.route.params.subscribe(
+      (params: Params) => {
+        this.id = params['id'];
+        if (isNaN(+this.id) || +this.id < 1) {
+          this.editMode = false;
+          return;
+        }
+
+        this.originalDocument = this.documentService.getDocument(this.id);
+        if (!this.originalDocument) {
+          return;
+        }
+
+        this.editMode = true;
+        this.document = JSON.parse(JSON.stringify(this.originalDocument));
+      }
+    );
+  }
+
+  onSubmit(form: NgForm) {
+    const value = form.value;
+    console.log(value);
+    const newDocument = new Document(
+      value.id,
+      value.name,
+      value.description,
+      value.url,
+      value.children
+    );
+
+    if (this.editMode) {
+      this.documentService.updateDocument(this.originalDocument, newDocument);
+    } else {
+      this.documentService.addDocument(newDocument);
+    }
+
+    this.router.navigate(['/documents']);
+  }
+
+  onCancel() {
+    this.router.navigate(['/documents']);
+  }
+
+}
+
+
+  /*   [x: string]: any;
+  @ViewChild('f', { static: false })
+  slForm!: NgForm; */
+
   // ngOnInit(){
   //   this.route.params.subscribe((params: Params) => {
   //       this['id'] = params['id'];
@@ -57,51 +106,4 @@ export class DocumentEditComponent implements OnInit {
 
   //     });
   // }
-
-
-  ngOnInit() {
-    this.route.params.subscribe(
-      (params: Params) => {
-        this.id = params['id'];
-        if (isNaN(+this.id) || +this.id < 1) {
-          this.editMode = false;
-          return;
-        }
-
-        this.originalDocument = this.documentService.getDocument(this.id);
-        if (!this.originalDocument) {
-          return;
-        }
-
-        this.editMode = true;
-        this.document = JSON.parse(JSON.stringify(this.originalDocument));
-      }
-    );
-  }
-
-  onSubmit(form: NgForm) {
-    const value = form.value;
-    const newDocument = new Document(
-      value.id,
-      value.name,
-      value.description,
-      value.url,
-      value.children
-    );
-
-    if (this.editMode) {
-      this.documentService.updateDocument(this.originalDocument, newDocument);
-    } else {
-      this.documentService.addDocument(newDocument);
-    }
-
-    this.router.navigate(['/documents']);
-  }
-
-  onCancel() {
-    this.router.navigate(['/documents']);
-  }
-
-}
-
 

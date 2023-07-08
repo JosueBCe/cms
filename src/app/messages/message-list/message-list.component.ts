@@ -13,7 +13,7 @@ export class MessageListComponent {
 
   ngOnInit() {
     //this.messages = this.messageService.getMessages();
-    this.messageService.messageChangedEvent 
+    this.messageService.messageChangedEvent
       .subscribe(
         (messages: Message[]) => {
           this.messages = messages;
@@ -98,7 +98,7 @@ export class MessageListComponent implements OnInit {
   ngOnInit() {
     this.subscription= this.messagesService.messagesChanged.subscribe(
       (messages: Message[]) => {
-      
+
         this.messages = messages;
         console.log(this.messages)
       }
@@ -111,7 +111,7 @@ export class MessageListComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 } */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Message } from '../message.model';
@@ -122,7 +122,7 @@ import { MessageService } from '../message.service';
   templateUrl: './message-list.component.html',
   styleUrls: ['./message-list.component.css']
 })
-export class MessageListComponent implements OnInit {
+export class MessageListComponent implements OnInit, OnDestroy{
   private subscription!: Subscription;
   messages: Message[] = [];
 
@@ -131,15 +131,15 @@ export class MessageListComponent implements OnInit {
   ngOnInit() {
     this.subscription = this.messageService.messagesChanged.subscribe(
       (messages: Message[]) => {
-        this.messages = messages;
         console.log(messages)
-
+        this.messages = messages;
       }
     );
-    this.messageService.getMessages().subscribe(
+    this.messageService.messageChangedEvent.subscribe(
+/*     this.messageService.getMessages().subscribe( */
       (messages: Message[]) => {
-        this.messages = messages;
         console.log(messages)
+        this.messages = messages;
 
       }
     );

@@ -29,7 +29,7 @@ export class MessageItemComponent implements OnInit {
     );
   } */
   ngOnInit() {
-    this.contactService.getSingleContact(this.message.id).subscribe(
+    this.contactService.getSingleContact(this.message.sender).subscribe(
       (response: any) => {
         const contact = response.contact;
         this.messageSender = contact.name;
@@ -39,9 +39,9 @@ export class MessageItemComponent implements OnInit {
       }
     );
   }
-  
+
 }
-  
+
 /* import { Component, Input } from '@angular/core';
 import { Contact } from 'src/app/contacts/contact.model';
 import { ContactService } from 'src/app/contacts/contact.service';
@@ -55,7 +55,7 @@ import { Observable, of } from 'rxjs';
 })
 export class MessageItemComponent {
   messageSender$: Observable<string | undefined> = of(undefined);
-  @Input() message!: Message; 
+  @Input() message!: Message;
 
   constructor(private contactService: ContactService) { }
 

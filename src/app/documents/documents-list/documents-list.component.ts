@@ -1,7 +1,8 @@
-import { Component, Output, EventEmitter, Injectable, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, Injectable, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Document } from '../document.model';
 import { DocumentService } from '../document.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable()
 @Component({
@@ -9,25 +10,31 @@ import { DocumentService } from '../document.service';
   templateUrl: './documents-list.component.html',
   styleUrls: ['./documents-list.component.css']
 })
-export class DocumentsListComponent implements OnInit {
+export class DocumentsListComponent implements OnInit, OnDestroy{
   private subscription!: Subscription;
+
   documents: Document[] = [];
 
-  constructor(private documentService: DocumentService) { }
+  constructor(private documentService: DocumentService,
+    private route: ActivatedRoute
+    ) { }
 
   ngOnInit() {
     // this.documents = this.documentService.getDocuments();
     this.subscription = this.documentService.documentListChangedEvent.subscribe(
       (documents: Document[]) => {
         this.documents = documents;
-        
+
       }
     )
- /*    this.documentService.documentChangedEvent.subscribe(
+     this.documentService.documentChangedEvent.subscribe(
       (documents: Document[]) => {
         this.documents = documents;
       }
-    ) */
+    )
+    this.route.params.subscribe(() => {
+      this.documentService.sortAndSend();
+    });
   }
 
   ngOnDestroy(): void {

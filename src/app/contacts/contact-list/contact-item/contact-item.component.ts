@@ -9,6 +9,7 @@ import { Contact } from '../../contact.model';
 })
 export class ContactItemComponent implements OnInit {
   @Input() contact: Contact | undefined;
+  @Input() justShow: boolean = false;
   @Output() contactSelected = new EventEmitter<void>();
 
   constructor() { }
