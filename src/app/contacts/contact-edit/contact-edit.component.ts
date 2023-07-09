@@ -62,7 +62,6 @@ export class ContactEditComponent implements OnInit {
     if (this.editMode) {
       this.contactService.contactsFetched = false;
       newContact.group = this.groupContacts;
-      console.log(newContact)
       this.contactService.updateContact(this.originalContact, newContact);
 
     } else {
@@ -113,7 +112,6 @@ export class ContactEditComponent implements OnInit {
       return;
     }
     this.groupContacts.push(selectedContact);
-    console.log('Updated group contacts:', this.groupContacts);
 
     this.contactService.contactsFetched = false;
   }

@@ -155,7 +155,6 @@ export class MessageService {
     this.getMessages().subscribe(
       (messages: Message[]) => {
         this.messages = messages;
-        console.log(this.messages)
         this.messagesChanged.next(this.messages.slice());
       },
       (error: any) => {

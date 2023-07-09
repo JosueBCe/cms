@@ -139,7 +139,6 @@ export class ContactService {
     this.getContacts().subscribe(
       (contacts: Contact[]) => {
         this.contacts = contacts;
-        console.log(this.contacts)
         this.maxContactId = this.getMaxId();
         this.contactChangedEvent.next(this.contacts.slice());
       },
@@ -241,7 +240,6 @@ export class ContactService {
   }
  */
   addContact(newContact: Contact) {
-    console.log(newContact);
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -251,7 +249,6 @@ export class ContactService {
       { headers: headers })
       .subscribe(
         (responseData) => {
-          console.log('New contact added:', responseData.contact);
           this.contacts.push(responseData.contact);
           this.contactListChangedEvent.next(this.contacts.slice());
         },
@@ -297,7 +294,6 @@ export class ContactService {
         () => {
           this.contactsFetched = false;
           this.contacts.splice(pos, 1);
-          console.log(this.contacts);
           this.contactListChangedEvent.next(this.contacts.slice());
         },
         (error: any) => {
