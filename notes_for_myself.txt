@@ -21,6 +21,7 @@ Preparing project tasks:
     - consider connecting with MongoDb and do the observable staff that happen in the docum-ents ✅
  - fix image path ✅
 
+nice
 
 
 
