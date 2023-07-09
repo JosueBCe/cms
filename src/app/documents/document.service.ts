@@ -107,12 +107,9 @@ addDocument(document: Document) {
   if (!document) {
     return;
   }
-
   // make sure id of the new Document is empty
   document.id = '';
-
   const headers = new HttpHeaders({'Content-Type': 'application/json'});
-
   // add to database
   this.http.post<{ message: string, document: Document }>(this.documentsUrl,
     document,

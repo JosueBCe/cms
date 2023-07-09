@@ -129,20 +129,27 @@ export class MessageListComponent implements OnInit, OnDestroy{
   constructor(private route: ActivatedRoute, private messageService: MessageService) { }
 
   ngOnInit() {
+
     this.subscription = this.messageService.messagesChanged.subscribe(
       (messages: Message[]) => {
-        console.log(messages)
         this.messages = messages;
+
+
       }
     );
     this.messageService.messageChangedEvent.subscribe(
 /*     this.messageService.getMessages().subscribe( */
-      (messages: Message[]) => {
-        console.log(messages)
-        this.messages = messages;
 
+      (messages: Message[]) => {
+
+
+        this.messages = messages;
       }
     );
+    this.route.params.subscribe(() => {
+      this.messageService.syncMessages();
+    });
+
   }
 
   onAddMessage(message: Message) {

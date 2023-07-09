@@ -30,6 +30,7 @@ export class MessageEditComponent {
     const id = this.id?.nativeElement.value;
     const newMsg = new Message(subject, msgText ,128);
     this.messageService.addMessage(newMsg);
+    this.messageService.syncMessages()
  /*    this.messageListComponent.ngOnInit() Line that makes work but upload everything again, unefficient*/
     this.onClear()
 

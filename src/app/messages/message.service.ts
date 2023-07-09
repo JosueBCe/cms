@@ -19,7 +19,7 @@ export class MessageService {
     this.getMessages().subscribe(
       (messages: Message[]) => {
         this.messages = messages;
-        this.messagesChanged.next(this.messages.slice());
+        this.messageChangedEvent.next(this.messages.slice());
 
       },
       (error: any) => {
@@ -30,7 +30,7 @@ export class MessageService {
 
   setMessages(messages: Message[]) {
     this.messages = messages;
-    this.messagesChanged.next(this.messages.slice());
+    this.messageChangedEvent.next(this.messages.slice());
   }
 
 
@@ -155,8 +155,8 @@ export class MessageService {
     this.getMessages().subscribe(
       (messages: Message[]) => {
         this.messages = messages;
-        console.log(messages)
-        this.messageChangedEvent.next(this.messages.slice());
+        console.log(this.messages)
+        this.messagesChanged.next(this.messages.slice());
       },
       (error: any) => {
         console.log(error);
@@ -168,7 +168,10 @@ export class MessageService {
 
   setMessages(messages: Message[]) {
     this.messages = messages;
-    this.messagesChanged.next(this.messages.slice());
+    this.messageChangedEvent.next(this.messages.slice());
+  }
+  syncMessages() {
+    this.messageChangedEvent.next(this.messages.slice());
   }
 
   getMessages(): Observable<Message[]> {
@@ -186,7 +189,7 @@ export class MessageService {
       }),
       tap((messages: Message[]) => {
         this.messages = messages;
-        this.messagesChanged.next(this.messages.slice());
+        this.messageChangedEvent.next(this.messages.slice());
       })
     );
   }
@@ -206,7 +209,7 @@ export class MessageService {
     this.http.put(this.messagesUrl, messages, { headers: headers })
       .subscribe(
         () => {
-          this.messagesChanged.next(messages.slice());
+          this.messageChangedEvent.next(messages.slice());
         },
         (error: any) => {
           console.log(error);
@@ -220,7 +223,7 @@ export class MessageService {
       .subscribe(
         (responseData) => {
           this.messages.push(responseData.data);
-          this.messagesChanged.next(this.messages.slice());
+          this.messageChangedEvent.next(this.messages.slice());
         },
         (error: any) => {
           console.log(error);
@@ -242,7 +245,7 @@ export class MessageService {
       .subscribe(
         () => {
           this.messages[pos] = newMessage;
-          this.messagesChanged.next(this.messages.slice());
+          this.messageChangedEvent.next(this.messages.slice());
         },
         (error: any) => {
           console.log(error);
@@ -262,7 +265,7 @@ export class MessageService {
       .subscribe(
         () => {
           this.messages.splice(pos, 1);
-          this.messagesChanged.next(this.messages.slice());
+          this.messageChangedEvent.next(this.messages.slice());
         },
         (error: any) => {
           console.log(error);

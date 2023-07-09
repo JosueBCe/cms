@@ -23,12 +23,14 @@ export class DocumentsListComponent implements OnInit, OnDestroy{
     // this.documents = this.documentService.getDocuments();
     this.subscription = this.documentService.documentListChangedEvent.subscribe(
       (documents: Document[]) => {
+
         this.documents = documents;
 
       }
     )
      this.documentService.documentChangedEvent.subscribe(
       (documents: Document[]) => {
+
         this.documents = documents;
       }
     )
